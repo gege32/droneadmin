@@ -6,6 +6,8 @@ import javax.swing.JSlider;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import java.awt.Insets;
+import java.util.concurrent.Callable;
+
 import javax.swing.JCheckBox;
 
 public class MainWindow {
@@ -114,6 +116,18 @@ public class MainWindow {
 
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
+	}
+	
+	public class WindowDataCallback{
+		
+		public void ControllerDataReceived(ControllerData data) {
+			
+		}
+		
+		public void DroneDataReceived(DroneData data) {
+			
+		}
+		
 	}
 
 }
