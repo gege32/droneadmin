@@ -12,7 +12,7 @@ import javax.swing.JCheckBox;
 
 public class MainWindow {
 
-	private JFrame frame;
+	private JFrame frame = new JFrame();
 
 	/**
 	 * Create the application.
@@ -26,7 +26,6 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
 		frame.setBounds(100, 100, 597, 409);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
