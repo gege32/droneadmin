@@ -13,9 +13,8 @@ public class App
 {
 	
 	private ExecutorService newFixedThreadPool;
+	private static MainWindow window = new MainWindow();
 	
-	private BlockingQueue<ControllerData> controllerDataQueue;
-    
 	/**
 	 * Launch the application.
 	 */
@@ -23,7 +22,6 @@ public class App
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +34,7 @@ public class App
 	
 	private void start() {
 		newFixedThreadPool = Executors.newFixedThreadPool(10);
-		newFixedThreadPool.submit(new ControllerReader(controllerDataQueue));
-		newFixedThreadPool.submit(new Communicator());
+		newFixedThreadPool.submit(new ControllerReader(window.getCallback()));
+//		newFixedThreadPool.submit(new Communicator());
 	}
 }

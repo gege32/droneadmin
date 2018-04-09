@@ -13,6 +13,12 @@ import javax.swing.JCheckBox;
 public class MainWindow {
 
 	private JFrame frame = new JFrame();
+	JSlider roll = new JSlider();
+	JSlider pitch = new JSlider();
+	JSlider yaw = new JSlider();
+	JSlider height = new JSlider();
+	
+	private WindowDataCallback callback = new WindowDataCallback();
 
 	/**
 	 * Create the application.
@@ -42,12 +48,11 @@ public class MainWindow {
 		gbc_lblRoll.gridy = 0;
 		frame.getContentPane().add(lblRoll, gbc_lblRoll);
 		
-		JSlider slider = new JSlider();
 		GridBagConstraints gbc_slider = new GridBagConstraints();
 		gbc_slider.insets = new Insets(0, 0, 5, 5);
 		gbc_slider.gridx = 1;
 		gbc_slider.gridy = 0;
-		frame.getContentPane().add(slider, gbc_slider);
+		frame.getContentPane().add(roll, gbc_slider);
 		
 		JCheckBox chckbxConnected = new JCheckBox("CONNECTED");
 		GridBagConstraints gbc_chckbxConnected = new GridBagConstraints();
@@ -63,12 +68,13 @@ public class MainWindow {
 		gbc_lblPitch.gridy = 1;
 		frame.getContentPane().add(lblPitch, gbc_lblPitch);
 		
-		JSlider slider_1 = new JSlider();
 		GridBagConstraints gbc_slider_1 = new GridBagConstraints();
 		gbc_slider_1.insets = new Insets(0, 0, 5, 5);
 		gbc_slider_1.gridx = 1;
 		gbc_slider_1.gridy = 1;
-		frame.getContentPane().add(slider_1, gbc_slider_1);
+		pitch.setMinimum(-1000);
+		pitch.setMaximum(1000);
+		frame.getContentPane().add(pitch, gbc_slider_1);
 		
 		JCheckBox chckbxSensorCalibrated = new JCheckBox("SENSOR CALIBRATED");
 		GridBagConstraints gbc_chckbxSensorCalibrated = new GridBagConstraints();
@@ -84,12 +90,13 @@ public class MainWindow {
 		gbc_lblYaw.gridy = 2;
 		frame.getContentPane().add(lblYaw, gbc_lblYaw);
 		
-		JSlider slider_2 = new JSlider();
 		GridBagConstraints gbc_slider_2 = new GridBagConstraints();
 		gbc_slider_2.insets = new Insets(0, 0, 5, 5);
 		gbc_slider_2.gridx = 1;
 		gbc_slider_2.gridy = 2;
-		frame.getContentPane().add(slider_2, gbc_slider_2);
+		yaw.setMinimum(-1000);
+		yaw.setMaximum(1000);
+		frame.getContentPane().add(yaw, gbc_slider_2);
 		
 		JCheckBox chckbxEscCalibrated = new JCheckBox("ESC CALIBRATED");
 		GridBagConstraints gbc_chckbxEscCalibrated = new GridBagConstraints();
@@ -105,12 +112,16 @@ public class MainWindow {
 		gbc_lblHeight.gridy = 3;
 		frame.getContentPane().add(lblHeight, gbc_lblHeight);
 		
-		JSlider slider_3 = new JSlider();
 		GridBagConstraints gbc_slider_3 = new GridBagConstraints();
 		gbc_slider_3.insets = new Insets(0, 0, 5, 5);
 		gbc_slider_3.gridx = 1;
 		gbc_slider_3.gridy = 3;
-		frame.getContentPane().add(slider_3, gbc_slider_3);
+		height.setMinimum(-1000);
+		height.setMaximum(1000);
+		frame.getContentPane().add(height, gbc_slider_3);
+		
+		roll.setMinimum(-1000);
+		roll.setMaximum(1000);
 	}
 
 	public void setVisible(boolean b) {
@@ -120,13 +131,20 @@ public class MainWindow {
 	public class WindowDataCallback{
 		
 		public void ControllerDataReceived(ControllerData data) {
-			
+			roll.setValue((int) (data.getRoll() * 1000));
+			pitch.setValue((int) (data.getPitch() * 1000));
+			yaw.setValue((int) (data.getYaw() * 1000));
+			height.setValue((int) (data.getHeight() * 1000));
 		}
 		
 		public void DroneDataReceived(DroneData data) {
 			
 		}
 		
+	}
+	
+	public WindowDataCallback getCallback() {
+		return callback;
 	}
 
 }
