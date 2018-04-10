@@ -35,6 +35,6 @@ public class App
 	private void start() {
 		newFixedThreadPool = Executors.newFixedThreadPool(10);
 		newFixedThreadPool.submit(new ControllerReader(window.getCallback()));
-//		newFixedThreadPool.submit(new Communicator());
+		newFixedThreadPool.submit(new Communicator());
 	}
 }
