@@ -24,6 +24,7 @@ public class Message {
 	
 	private byte messageType;
 	
+	//value should be a 4 byte number in Q31 number format
 	private int value;
 
 	public Message(byte messageType, int value) {
