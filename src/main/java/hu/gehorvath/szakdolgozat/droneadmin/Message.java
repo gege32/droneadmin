@@ -25,9 +25,9 @@ public class Message {
 	private byte messageType;
 	
 	//value should be a 4 byte number in Q31 number format
-	private int value;
+	private byte[] value;
 
-	public Message(byte messageType, int value) {
+	public Message(byte messageType, byte[] value) {
 		super();
 		this.messageType = messageType;
 		this.value = value;
@@ -36,10 +36,10 @@ public class Message {
 	public void write(BufferedOutputStream os) throws IOException{
 		os.write(MESSAGE_START.getBytes(CHARSET));
 		os.write(messageType);
-		os.write((byte)(value >> 24));
-		os.write((byte)(value >> 16));
-		os.write((byte)(value >> 8));
-		os.write((byte)(value));
+		os.write((value[3]));
+		os.write((value[2]));
+		os.write((value[1]));
+		os.write((value[0]));
 		os.write(MESSAGE_END.getBytes(CHARSET));
 		os.flush();
 	}
