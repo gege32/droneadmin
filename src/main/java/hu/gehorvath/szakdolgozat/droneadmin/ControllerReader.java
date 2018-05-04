@@ -30,7 +30,7 @@ public class ControllerReader implements Runnable {
 			// try {
 			// controllerDataQueue.put(ControllerData.fromControllerState(currState));
 			ControllerData fromControllerState = ControllerData.fromControllerState(currState);
-			windowDataCallback.ControllerDataReceived(fromControllerState);
+			windowDataCallback.controllerDataReceived(fromControllerState);
 //			System.out.println(fromControllerState.toString());
 			// } catch (InterruptedException e1) {
 			// // TODO Auto-generated catch block
