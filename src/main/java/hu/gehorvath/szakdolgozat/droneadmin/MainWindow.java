@@ -134,7 +134,7 @@ public class MainWindow {
 			roll.setValue((int) (data.getRoll() * 1000));
 			pitch.setValue((int) (data.getPitch() * 1000));
 			yaw.setValue((int) (data.getYaw() * 1000));
-			height.setValue((int) (data.getHeight() * 1000));
+			height.setValue((int) (data.getThrottle() * 1000));
 		}
 		
 		public void droneDataReceived(DroneData data) {

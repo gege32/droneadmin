@@ -1,7 +1,6 @@
 package hu.gehorvath.szakdolgozat.droneadmin;
 
 import java.awt.EventQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,7 +33,8 @@ public class App
 	
 	private void start() {
 		newFixedThreadPool = Executors.newFixedThreadPool(10);
-		newFixedThreadPool.submit(new ControllerReader(window.getCallback()));
-		newFixedThreadPool.submit(new Communicator());
+		Communicator communicator = new Communicator();
+		newFixedThreadPool.submit(communicator);
+		newFixedThreadPool.submit(new ControllerReader(window.getCallback(), communicator.getDataCallback()));
 	}
 }

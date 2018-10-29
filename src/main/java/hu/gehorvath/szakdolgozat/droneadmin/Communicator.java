@@ -7,12 +7,13 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import jssc.SerialPort;
+import jssc.SerialPortException;
+
 public class Communicator implements Runnable {
 
-	private Socket droneSocket;
-	private InputStream inputStream;
-	private OutputStream outputStream;
-	
+	private SerialPort droneSocket;
+
 	private LinkedBlockingQueue<ControllerData> queue = new LinkedBlockingQueue<ControllerData>(5);
 
 	private boolean enabled = true;
@@ -21,17 +22,15 @@ public class Communicator implements Runnable {
 
 		while (enabled) {
 			try {
-				droneSocket = new Socket("192.168.4.1", 22000);
+				droneSocket = new SerialPort("COM11");
+				droneSocket.openPort();
+				droneSocket.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+						SerialPort.PARITY_NONE);
 
 				System.out.println("Connected");
-				inputStream = droneSocket.getInputStream();
-				outputStream = droneSocket.getOutputStream();
-				byte buffer;
-				while (enabled) {
-					if (inputStream.available() > 0) {
-						buffer = (byte) inputStream.read();
-						System.out.println(Byte.valueOf(buffer));
-						outputStream.write("e".getBytes());
+				while (enabled && droneSocket.isOpened()) {
+					if (!queue.isEmpty()) {
+						calculateCommand(queue.take()).write(droneSocket);
 					}
 					
 					Thread.sleep(200);
@@ -42,22 +41,8 @@ public class Communicator implements Runnable {
 				e.printStackTrace();
 			} finally {
 				try {
-					inputStream.close();
-					inputStream = null;
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					outputStream.close();
-					outputStream = null;
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					droneSocket.close();
-				} catch (IOException e) {
+					droneSocket.closePort();
+				} catch (SerialPortException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -75,29 +60,37 @@ public class Communicator implements Runnable {
 	public void stop() {
 		this.enabled = false;
 	}
-	
+
 	private Message calculateCommand(ControllerData data) {
 		Message ret;
-		//thats some error handling, data shouldnt be null, but when is, lets just hover
-		if(data == null) {
-			ret = new Message(Message.MessageType.HOVER, 0);
-		}
-		
+		// thats some error handling, data shouldnt be null, but when is, lets just
+		// hover
+		Q31 roll = Q31.fromFloat(data.getRoll());
+		Q31 pitch = Q31.fromFloat(data.getPitch());
+		Q31 yaw = Q31.fromFloat(data.getYaw());
+		byte[] throttle = new byte[4];
+
+		ret = new Message(throttle, roll.getQ31(), pitch.getQ31(), yaw.getQ31());
+
 		return ret;
 	}
-	
-	public class CommunicatorDataReceivedCallback{
-		
+
+	public class CommunicatorDataReceivedCallback {
+
 		public void controllerDataReceived(ControllerData data) {
-			if(enabled) {
+			if (enabled) {
 				boolean success = queue.offer(data);
-				//if the queue is full, probably we should just throw the data away
-				if(!success) {
+				// if the queue is full, probably we should just throw the data away
+				if (!success) {
 					queue.clear();
 				}
 			}
 		}
-		
+
+	}
+	
+	public CommunicatorDataReceivedCallback getDataCallback() {
+		return new CommunicatorDataReceivedCallback();
 	}
 
 }
