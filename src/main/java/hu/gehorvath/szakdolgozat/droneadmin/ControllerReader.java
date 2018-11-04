@@ -34,7 +34,7 @@ public class ControllerReader implements Runnable {
 			windowDataCallback.controllerDataReceived(fromControllerState);
 
 			try {
-				Thread.sleep(150);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

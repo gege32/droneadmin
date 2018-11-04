@@ -14,7 +14,7 @@ public class Communicator implements Runnable {
 
 	private SerialPort droneSocket;
 
-	private LinkedBlockingQueue<ControllerData> queue = new LinkedBlockingQueue<ControllerData>(5);
+	private LinkedBlockingQueue<ControllerData> queue = new LinkedBlockingQueue<ControllerData>(1);
 
 	private boolean enabled = true;
 
@@ -33,7 +33,7 @@ public class Communicator implements Runnable {
 						calculateCommand(queue.take()).write(droneSocket);
 					}
 					
-					Thread.sleep(200);
+					Thread.sleep(350);
 				}
 
 			} catch (Exception e) {
@@ -68,9 +68,8 @@ public class Communicator implements Runnable {
 		Q31 roll = Q31.fromFloat(data.getRoll());
 		Q31 pitch = Q31.fromFloat(data.getPitch());
 		Q31 yaw = Q31.fromFloat(data.getYaw());
-		byte[] throttle = new byte[4];
 
-		ret = new Message(throttle, roll.getQ31(), pitch.getQ31(), yaw.getQ31());
+		ret = new Message(data.getThrottleConverted(), roll.getQ31(), pitch.getQ31(), yaw.getQ31());
 
 		return ret;
 	}
