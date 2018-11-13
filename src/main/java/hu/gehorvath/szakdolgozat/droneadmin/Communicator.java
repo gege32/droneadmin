@@ -22,7 +22,7 @@ public class Communicator implements Runnable {
 
 		while (enabled) {
 			try {
-				droneSocket = new SerialPort("COM11");
+				droneSocket = new SerialPort("COM7");
 				droneSocket.openPort();
 				droneSocket.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 						SerialPort.PARITY_NONE);
@@ -68,8 +68,9 @@ public class Communicator implements Runnable {
 		Q31 roll = Q31.fromFloat(data.getRoll());
 		Q31 pitch = Q31.fromFloat(data.getPitch());
 		Q31 yaw = Q31.fromFloat(data.getYaw());
+		Q31 throttle = Q31.fromFloat(data.getThrottle());
 
-		ret = new Message(data.getThrottleConverted(), roll.getQ31(), pitch.getQ31(), yaw.getQ31());
+		ret = new Message(throttle.getQ31(), roll.getQ31(), pitch.getQ31(), yaw.getQ31());
 
 		return ret;
 	}

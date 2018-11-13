@@ -41,35 +41,11 @@ public class ControllerData {
 	}
 
 	public float getThrottle() {
-		return throttle;
-	}
-
-	/**
-	 * Scaled up to 1000-2000 boundries, MSB first.
-	 * 
-	 * @return
-	 */
-	public byte[] getThrottleConverted() {
-		if (start) {
-			byte[] throttle = new byte[4];
-
-			int temp = (int) (this.throttle * 1000.0f);
-			// int temp = (int) (0.5f * 1000.0f);
-			if (temp < 0) {
-				temp = 0;
-			}
-			temp = (temp / 2) + 1000;
-
-			throttle[0] = (byte) ((temp >> 24) & 0xff);
-			throttle[1] = (byte) ((temp >> 16) & 0xff);
-			throttle[2] = (byte) ((temp >> 8) & 0xff);
-			throttle[3] = (byte) ((temp) & 0xff);
-
-			return throttle;
-		}else {
-			return new byte[] {0x00, 0x00, 0x00, 0x00};
+		if(start) {
+			return 0.125f + (this.throttle / 3f);
+		}else{
+			return 0.0f;
 		}
-
 	}
 
 	public String toString() {
